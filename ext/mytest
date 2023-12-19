@@ -13,7 +13,7 @@ MSGHIDDEN=""	# This can be used to store text, that is hidden on the xymon testp
 # - Check the output a log file
 # Change the $COLOR according to the outcome of your test commands.
 
-# This example stores the output from a executable and determines the COLOR by the commands exit code
+# This example stores the output from an executable and determines the COLOR by the commands exit code
 OUTPUT=$(/path/to/executable --optional-parameters)
 EXITSTATUSCODE=$?
 case $EXITSTATUSCODE in
