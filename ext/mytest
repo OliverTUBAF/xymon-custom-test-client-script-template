@@ -1,0 +1,49 @@
+#!/bin/bash
+COLUMN="mytest"	# Name of the column
+COLOR="green"	# Sets the default color, by default, everthing is OK
+MSG=""		# This variable is used to store text content that is shown on the page of test ($COLUMN)
+MSGHIDDEN=""	# This can be used to store text, that is hidden on the xymon testpage (useful for graphing data)
+
+# Starting the actual test:
+
+# Run commands here, where this script can determine the status of the component you want to test.
+# Some examples what you can do:
+# - Check the exit code of a command
+# - Grep text from an output of command or a file
+# - Check the output a log file
+# Change the $COLOR according to the outcome of your test commands.
+
+# This example stores the output from a executable and determines the COLOR by the commands exit code
+OUTPUT=$(/path/to/executable --optional-parameters)
+EXITSTATUSCODE=$?
+case $EXITSTATUSCODE in
+	0) 
+		MSG="&${COLOR} No Problems detected:
+		${OUTPUT}
+		"
+	;;
+	1)
+		COLOR=yellow
+		MSG="&${COLOR} Problems detected:
+		${OUTPUT}
+		"
+	;;
+	*)
+		COLOR=red
+		MSG="&${COLOR} Serious problems detected:
+		${OUTPUT}
+		"
+	;;
+esac
+
+# Here the message is preceded with the according color smiley from xymon ('&${COLOR}'), followed by a short text and 
+# the ${OUTPUT} of the command. 
+# Now we need to report this to xymon server:
+
+$XYMON $XYMSRV "status $MACHINE.$COLUMN $COLOR $(date)
+
+${MSG}
+"
+
+# The variables $XYMON, $XYMSRV and $MACHINE are retrieved from the environment of this script defined by this tests .cfg file.
+# $(date) retrieves the current timestamp from the system using the "date" command.
